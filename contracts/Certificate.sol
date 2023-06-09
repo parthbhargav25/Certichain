@@ -1,17 +1,18 @@
 pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/contracts/access/Ownable.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/contracts/security/Pausable.sol";
-// import "@openzeppelin/contracts/utils/Pausable.sol";
-// import "@openzeppelin/contracts/access/Ownable.sol";
+// import "https://github.com/OpenZeppelin/openzeppelin-contracts/contracts/access/Ownable.sol";
 
-
-contract Certificates is Ownable{
+contract Certificates {
     
     uint256 public collegecnt = 0;
     uint256 public studentcnt = 0;
     uint256 public certificatecnt = 0;
+    address public owner;
+
+    constructor(){
+        owner = msg.sender;
+    }
     
     event clgAdded(uint indexed clg_id,string clg_name,uint times);
     event clgRegistered(uint indexed clg_id,bool isReg,uint times);
@@ -43,9 +44,7 @@ contract Certificates is Ownable{
         uint cllg_id;
         uint certcount;
         uint[] certs;
-
     } 
-    
     
     mapping(address=>College) public colleges;
     mapping(uint=>address) public colId;
@@ -74,6 +73,11 @@ contract Certificates is Ownable{
         _;
         
     }
+
+    modifier onlyOwner(){
+        require(msg.sender == owner);
+        _;
+    }
     
     modifier uniquestudent(uint _aadhar){
         bool unique = true;
@@ -92,12 +96,13 @@ contract Certificates is Ownable{
     function addCollege(string memory _clg_name)public uniqueclg(msg.sender){
         collegecnt++;
         colId[collegecnt] = msg.sender;
-        colleges[msg.sender].clg_id = collegecnt;
-        colleges[msg.sender].clg_name = _clg_name;
-        colleges[msg.sender].clg_address = msg.sender;
-        colleges[msg.sender].isregistered = false;
-        emit clgAdded(collegecnt, _clg_name, block.timestamp);
-        
+        College memory newCollege;
+        newCollege.clg_id = collegecnt;
+        newCollege.clg_name = _clg_name;
+        newCollege.clg_address = msg.sender;
+        newCollege.isregistered = false;
+        colleges[msg.sender] = newCollege;
+        emit clgAdded(collegecnt, _clg_name, block.timestamp);    
     }
     
     function registerCollege(uint _clg_id,bool _reg)public onlyOwner{
@@ -108,25 +113,28 @@ contract Certificates is Ownable{
     function addStudent(uint _cllg_id,uint _aadhar,string memory _name)public onlyRegisteredCollege(msg.sender) uniquestudent(_aadhar){
         studentcnt++;
         stuId[studentcnt]= _aadhar;
-        students[_aadhar].stu_aadhar_no = _aadhar;
-        students[_aadhar].stu_name = _name;
-        students[_aadhar].stu_id = studentcnt;
-        students[_aadhar].cllg_id = _cllg_id;
-        students[_aadhar].certcount = 0;
+        Student memory newStudent;
+        newStudent.stu_aadhar_no = _aadhar;
+        newStudent.stu_name = _name;
+        newStudent.stu_id = studentcnt;
+        newStudent.cllg_id = _cllg_id;
+        newStudent.certcount = 0;
+        students[_aadhar] = newStudent;
         colleges[msg.sender].clg_student.push(studentcnt);
         emit stuAdded(studentcnt, _aadhar,_name, _cllg_id, block.timestamp);
     }
     
-
     function addCertificate(uint _cllg_id,uint _stu_id,uint _studentaadhar,string memory _hash,string memory _name)public{ 
         certificatecnt++;
-        certy[certificatecnt].cert_id = certificatecnt;
-        certy[certificatecnt].stu_id = _stu_id;
-        certy[certificatecnt].college_id = _cllg_id;
-        certy[certificatecnt].cert_name = _name;
-        certy[certificatecnt].student_aadhar = _studentaadhar;
-        certy[certificatecnt].ipfs_hash = _hash;
-        certy[certificatecnt].time = block.timestamp;
+        Cert memory newCert;
+        newCert.cert_id = certificatecnt;
+        newCert.stu_id = _stu_id;
+        newCert.college_id = _cllg_id;
+        newCert.cert_name = _name;
+        newCert.student_aadhar = _studentaadhar;
+        newCert.ipfs_hash = _hash;
+        newCert.time = block.timestamp;
+        certy[certificatecnt] = newCert;
         students[_studentaadhar].certs.push(certificatecnt);
         students[_studentaadhar].certcount++;
         emit certAdded(certificatecnt, _cllg_id, _stu_id, block.timestamp);
@@ -139,7 +147,5 @@ contract Certificates is Ownable{
     
     function getStuCert(uint _aadhar) public view returns(uint[] memory){
         return students[_aadhar].certs;
-    }
-    
-    
+    } 
 }

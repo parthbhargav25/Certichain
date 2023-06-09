@@ -71,23 +71,9 @@
       "type": "function"
     },
     {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "previousOwner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "OwnershipTransferred",
-      "type": "event"
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
     },
     {
       "anonymous": false,
@@ -189,13 +175,6 @@
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "anonymous": false,
       "inputs": [
         {
@@ -231,19 +210,6 @@
       ],
       "name": "stuAdded",
       "type": "event"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
     },
     {
       "inputs": [],
@@ -13256,8 +13222,8 @@
         }
       },
       "links": {},
-      "address": "0xD5BabD0E3483EB41F3FC5385D5Facb3446DbbB37",
-      "transactionHash": "0xef9a70681f31ab9461e2aa2ab6926731e0d3a37570c9304bfe005942f2ffbf69"
+      "address": "0xd9145CCE52D386f254917e481eB44e9943F39138",
+      "transactionHash": "0x410411df8b0eed5f041603e230cd8d31d67db46a371cceb65c7022a5f2492876"
     },
     "4": {
       "events": {},
@@ -13406,8 +13372,8 @@
         }
       },
       "links": {},
-      "address": "0xc26BD4EB7aE6D7276b1975bD7901070144Db7D90",
-      "transactionHash": "0x4605e2a57b94d8dd04b3813d23281235d4f7ced536b555882be4660e6a328446"
+      "address": "0xd9145CCE52D386f254917e481eB44e9943F39138",
+      "transactionHash": "0x410411df8b0eed5f041603e230cd8d31d67db46a371cceb65c7022a5f2492876"
     }
   },
   "schemaVersion": "3.2.4",
